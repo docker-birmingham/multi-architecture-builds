@@ -1,0 +1,28 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$installDocker = <<-SCRIPT
+    curl -fsSL https://get.docker.com | sh
+    usermod -aG docker vagrant
+SCRIPT
+
+$installBuildx = <<-SCRIPT
+    curl -fsSL https://github.com/docker/buildx/releases/download/v0.3.1/buildx-v0.3.1.linux-amd64 -o buildx-v0.3.1.linux-amd64
+    mkdir -p ~/.docker/cli-plugins
+    mv buildx-v0.3.1.linux-amd64 ~/.docker/cli-plugins/docker-buildx
+    chmod +x ~/.docker/cli-plugins/docker-buildx
+    sudo docker run --rm --privileged docker/binfmt:66f9012c56a8316f9244ffd7622d7c21c1f6f28d
+    cat /proc/sys/fs/binfmt_misc/qemu-aarch64
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "2048"
+    vb.cpus = "2"
+  end
+  config.vm.provision "shell", inline: $installDocker, name: "Install Docker"
+  config.vm.provision "shell", inline: $installBuildx, name: "Install Buildx", privileged: false
+  config.vm.provision "file", source: "../packetbeat", destination: "$HOME/"
+  config.vm.provision "file", source: "../hello-world", destination: "$HOME/"
+end
