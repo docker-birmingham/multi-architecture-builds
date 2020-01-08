@@ -4,7 +4,7 @@ COPY hello-world.go .
 
 RUN go build hello-world.go
 
-FROM scratch
+FROM alpine
 
 COPY --from=build /go/hello-world /hello
 
