@@ -74,6 +74,21 @@ resource "aws_key_pair" "auth" {
   public_key = file(var.public_key_path)
 }
 
+data "aws_ami" "amazon-linux-2" {
+  most_recent = true
+  owners = ["099720109477"]
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["arm64"]
+  }
+}
+
 resource "aws_instance" "multiarch" {
   connection {
     host        = coalesce(self.public_ip, self.private_ip)
@@ -84,7 +99,7 @@ resource "aws_instance" "multiarch" {
   }
 
   instance_type          = "a1.medium"
-  ami                    = "ami-07a3c7461cc82f8ff"
+  ami                    = data.aws_ami.amazon-linux-2.id
   key_name               = aws_key_pair.auth.id
   vpc_security_group_ids = [aws_security_group.multiarch.id]
   subnet_id              = aws_subnet.multiarch.id
@@ -92,8 +107,8 @@ resource "aws_instance" "multiarch" {
 
   provisioner "remote-exec" {
     inline = [
-      curl -fsSL https://get.docker.com | sh
-      sudo usermod -aG docker ubuntu
+      "curl -fsSL https://get.docker.com | sh",
+      "sudo usermod -aG docker ubuntu"
     ]
   }
 }
