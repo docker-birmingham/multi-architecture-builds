@@ -3,3 +3,5 @@ vagrant/*.log.terraform
 *.tfstate*
 .terraform
 *cloudimg-console.log
+*.idea
+
