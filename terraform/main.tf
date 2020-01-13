@@ -127,10 +127,5 @@ output "VPCI_ID" {
 }
 
 output "SSH_Command" {
-  value = "autossh -M 0 ubuntu@${aws_instance.multiarch.public_ip}"
+  value = "ssh ubuntu@${aws_instance.multiarch.public_ip}"
 }
-
-output "SSHuttle_Command" {
-  value = "sshuttle -e 'autossh -M 0' --dns -NHr ubuntu@${aws_instance.multiarch.public_ip} 0/0"
-}
-
