@@ -2,7 +2,7 @@
 
 This repo has the slides and some brief instructions for the [Jan 2020 Docker meetup](https://www.meetup.com/Docker-Birmingham/events/drrkmrybccblb/) I spoke at.   
 
-The slides are available [here](Docker Birmingham January 2020.pdf).
+The slides are available [here](Docker_Birmingham_January_2020_Slides.pdf).
 
 ## Getting Started
 
